@@ -8,6 +8,8 @@ class Scene():
         self.location = location
         self.paths = paths
 
+    def mk_entrance():
+        return Scene("outside the castle door", {"forward": "enter the castle!"})
     def mk_dungeon():
         return Scene("Dungeon",{"left": "explore the left cellar",
                                 "forward": "hidden trapdoor",
