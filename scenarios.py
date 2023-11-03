@@ -9,7 +9,7 @@ class Scene():
         self.paths = paths
 
     def mk_entrance():
-        return Scene("outside the castle door", {"forward": "enter the castle!"})
+        return Scene("you being your quest outside the castle door", {"forward": "enter the castle!"})
     def mk_dungeon():
         return Scene("Dungeon",{"left": "explore the left cellar",
                                 "forward": "hidden trapdoor",
