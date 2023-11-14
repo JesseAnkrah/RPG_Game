@@ -1,12 +1,11 @@
 # this file will hold all the scenarios that will be used in the main file
 
-# ":" is used to type cast and "=" is used for default values
-#the "assert" keyword is used as a validator for the data you put inside
-# ex: assert x >= 0, f"{x} is not greater than or equal to zero!!"
 class Scene():
     def __init__(self,location, paths):
         self.location = location
         self.paths = paths
+        self.present_players = []
+        self.present_items = []
 
     def mk_entrance():
         return Scene("you being your quest outside the castle door", {"forward": "enter the castle!"})
@@ -18,8 +17,7 @@ class Scene():
     def mk_palace():
         return Scene("Palace",{"left": "enter the palace ballroom",
                                 "forward": "enter the dungeon",
-                                "right": "enter palace dining room",
-                                "back": "return to the entrance"})
+                                "right": "enter palace dining room",})
     def mk_palace_ballroom():
         return Scene("palace ballroom",{"left": "explore the left side of the ballroom",
                                         "forward": "enter graveyard",
@@ -31,7 +29,7 @@ class Scene():
                                   "right": "explore the graveyard",
                                   "back": "return to the palace ballroom"})
     def mk_escape_tunnel():
-        return Scene("Graveyard",{"forward": "you move closer to the light",
+        return Scene("Tunnel",{"forward": "you move closer to the light",
                                   "forward": "you move even closer to the light",
                                   "forward": "The light is moving towards you!",
                                   "forward": "you are engulfed in the light you cannot escape!"})
@@ -39,8 +37,3 @@ class Scene():
         return Scene("heaven or hell",{"up": "you are being transported to hell",
                                        "down": "you are being transported to heaven"})
     
-# dungeon = Scene.mk_dungeon()
-# print(dungeon.location)
-
-
-
