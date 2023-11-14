@@ -1,24 +1,6 @@
 import random
-import items
+import items  
 import scenarios
-# there will be items that boost hidden stats only
-# track location of 'monster'
-# monster will pop up randomly and chase you for a random amount of 'tiles'
-# or turns which ever one
-# you can fight back 
-# stats will constantly be adjusting in the background
-# stats will be displayed every 5 tiles moved or turns 
-# will prob need some sort of counter variable multiple at that
-# will keep a timer or clock in the background 
-# this will be in charge of monster attacks along with randomint method
-# the longer the time spent in the castle the more likely you die
-# all players will find a clock to start 
-# each movement or check bag causes a timer or counter to increase
-# movements are 1 full point but checking bag would be .25 points
-# each point increase causes a random number to spawn 
-# the number is used to determine if an event such as monster attack will occur
-
-
 
 # asks the user if they want to begin and only takes yes or no
 # if neither is input it will continue to ask the user until one is input
@@ -33,8 +15,12 @@ while begin == False:
         print("goodbye!")
         exit()
 
+# useful print statements i made functions to call easily 
 def line_break():
     print("-----------------------------------------")
+
+def possible_paths():
+    print("these are all possible paths")
 
 def choose_path():
     print("choose your path from the options below!")
@@ -66,12 +52,34 @@ class Player:
     def choices(self):
         self.options = ["check bag","move","fight"]
 
+    def current_stats(self):
+        print(f"{self.health}:health")
+        print(f"{self.stamina}:stamina")
+        print(f"{self.sanity}:sanity")
+        print(f"{self.hunger}:hunger")
+        if self.stamina <= 0:
+            print(f"{self.fatigue}:fatigue")
+
+
+# monster stats, and info
+class Monster():
+    def __init__(self, name, health, hunger, strength):
+        self.name = name
+        self.health = health
+        self.hunger = hunger
+        self.strength = strength
+
+
+# monster object created and assigned to monster variable
+monster = Monster("Monster", 700, 0, 30)
+
+
 # different players which means different stats ect.
-bimbardo = Player("Bimbardo","Mercenaries",150,33,0,100,0,100,5,0)
-tortus = Player("Tortus","Knights",120,42,0,100,0,130,4,0)
-sir_rath = Player("Sir-Rath","Nobles",100,50,0,100,0,150,3,0)
-night_witch = Player("Night-Witch","Witches",80,63,0,100,0,170,0,0)
-no_name = Player("NO-Name","Assasins",50,100,0,100,0,200,0,0)
+bimbardo = Player("Bimbardo","Mercenaries",150,33,0,100,0,100,5,1)
+tortus = Player("Tortus","Knights",120,42,0,100,0,130,4,3)
+sir_rath = Player("Sir-Rath","Nobles",100,50,0,100,0,150,3,5)
+night_witch = Player("Night-Witch","Witches",80,63,0,100,0,170,0,7)
+no_name = Player("NO-Name","Assasins",50,100,0,100,0,200,0,10)
 
 char_list = ["Bimbardo","Tortus","Sir-Rath","Night-Witch","NO-Name"]
 
@@ -82,27 +90,34 @@ def char_select():
     global play_char
     global game_start_entrance
 
-    play_char = input("what character would you like to select? ")
+    play_char_name = input("what character would you like to select? ")
     
-    if play_char in char_list:
-        print(f"You chose: {play_char}")
+    if play_char_name in char_list:
+        print(f"You chose: {play_char_name}")
         line_break()
-        if play_char == "Bimbardo":
+        if play_char_name == "Bimbardo":
             play_char = bimbardo
-        elif play_char == "Tortus":
+            print(play_char)
+        elif play_char_name == "Tortus":
             play_char = tortus
-        elif play_char == "Sir-Rath":
+            print(play_char)
+        elif play_char_name == "Sir-Rath":
             play_char = sir_rath
-        elif play_char == "Night-Witch":
+            print(play_char)
+        elif play_char_name == "Night-Witch":
             play_char = night_witch
-        elif play_char == "NO-Name":
+            print(play_char)
+        elif play_char_name == "NO-Name":
             play_char = no_name
-        print(play_char)
-        begin = None
+            print(play_char)
+        
+        begin = False
         game_start_entrance = True
     else:
         print("please select a character from the list(watch for caps)")
 
+# how the user selects a character 
+# allows multiple chances to select character
 if begin == True:
     print("There are many characters to choose from")
     print("take you pick",char_list)
@@ -110,64 +125,145 @@ if begin == True:
     while begin == True:
         char_select()
 
-# function to start the game off
-# takes input to displat either the path your allowed to go
-# the option to fight
-# or check your bag for items
-# prints the scene options such as "forward" "back" ect.
-def entrance_sequence():
+
+# map object generation 
+entrance = scenarios.Scene.mk_entrance()
+palace = scenarios.Scene.mk_palace()
+palace_ballroom = scenarios.Scene.mk_palace_ballroom()
+dungeon = scenarios.Scene.mk_dungeon()
+graveyard = scenarios.Scene.mk_graveyard()
+escape_tunnel = scenarios.Scene.mk_escape_tunnel()
+lament_ending = scenarios.Scene.mk_lament_ending()
+
+
+# how item generate will be carried out
+# items will not be guaranteed to generate
+item_generation_chance = random.randint(0,10)
+item_generation = None
+# character luck stat affects the item generation chance
+if play_char.luck >= 5:
+    item_generation_chance = random.randint(3,10)
+# numbers 5 or greater will generate items anything less wont 
+if item_generation_chance < 5:
+    item_generation = False
+elif item_generation_chance >= 5:
+    item_generation = True
+
+# items objects being made
+if item_generation == True:
+    print("a mysterious force is at hand!")
+    print("go look for items to help you survive")
+    book = items.Items.book()
+    blade = items.Items.blade()
+    holy_water = items.Items.holy_water()
+    torch = items.Items.torch()
+    health_potion1 = items.Items.health_potion()
+    health_potion2 = items.Items.health_potion()
+    health_potion3 = items.Items.health_potion()
+    holy_blade = items.Items.holy_blade()
+    lament_puzzle1 = items.Items.lament_puzzle()
+    lament_puzzle2 = items.Items.lament_puzzle()
+    lament_puzzle3 = items.Items.lament_puzzle()
+    completed_lament = items.Items.completed_lament()
+
+elif item_generation == False:
+    print("Make it out quick!")
+    print("for you shall surely perish otherwise")
+
+
+player_location_list = [entrance.present_players, palace.present_players,
+                        palace_ballroom.present_players,dungeon.present_players,
+                        graveyard.present_players]
+
+
+# how monster attacks will be generated 
+def monster_attack_func():
+    monster_attack_chance = random.randint(8,10)
+    monster_attack = False
+    # if monster attack chance is 8 or above
+    # the monster will attack
+    if monster_attack_chance >= 8:
+        monster_attack = True
+    elif monster_attack_chance <= 7:
+        monster_attack = False
+    
+    if monster_attack == True:
+        # checks the player location list and its nested list for the play char
+        # if true, it then checks each list via index and locates the player
+        # adds the monster to the players nested list area so it can "fight"
+        if any(play_char in list for list in player_location_list):
+            print(player_location_list)
+            print("im losing my mind please work")
+            print(player_location_list[0][0].name)
+            if player_location_list[0][0].name == play_char.name:
+                player_location_list[0].append(monster)
+            elif player_location_list[1][0].name == play_char.name:
+                player_location_list[1].append(monster)
+            elif player_location_list[2][0].name == play_char.name:
+                player_location_list[2].append(monster)
+            elif player_location_list[3][0].name == play_char.name:
+                player_location_list[3].append(monster)
+            elif player_location_list[4][0].name == play_char.name:
+                player_location_list[4].append(monster)
+    if monster_attack == False:
+        line_break()
+        print("you should move faster something has happend")
+    return monster_attack #returns a boolean to be used later
+
+
+# attaches boolean true or false to monster_attack_result
+# will be used to force the character to fight
+monster_attack_result = monster_attack_func()
+
+if game_start_entrance == True:
+    entrance.present_players.append(play_char)
+    
+while game_start_entrance == True:
+    # takes input to display either the path your allowed to go
+    # the option to fight, or check your bag
+    # prints the scene options such as "forward" "back" ect.
     line_break()
-    entrance = scenarios.Scene.mk_entrance()
     print(entrance.location)
     print("what will you do")
     play_char.choices()
     print(play_char.options)
-    play_char_input = str(input("choose what to do: ")).lower()
+    play_char_input = input("choose what to do: ").lower()
     if play_char_input == "move":
-        print(scenarios.Scene.mk_entrance().paths)
+        line_break()
+        possible_paths()
+        print(entrance.paths)
         choose_path()
         play_char.move()
         print([play_char.directions[1]])
         line_break()
-        global game_start_entrance
-        global game_start_palace 
-        game_start_palace = False
         game_start_entrance = False
-        play_char_input == str(input("choose what to do: ")).lower()
+        play_char_input = str(input("choose where to move: ")).lower()
         if play_char_input == "forward":
             game_start_palace = True
+            entrance.present_players.remove(play_char)
     elif play_char_input == "check bag":
+        print("these are the items in your bag")
         play_char.bag()
         print(play_char.loot)
     elif play_char_input == "fight":
         print("there is no one here...")
+        # if monster_attack_result:
+        #     print("hope this works")
+        #     print(monster.health)
+        #     print(play_char.health)
+        #     play_char.health -= monster.strength
+        #     print(play_char.health)
+        #     print(player_location_list[0])
+        # else:
+        #     print("there is no one here...")
+    
 
-# def entrance_sequence_forward():
-#     if game_start_entrance == "move"
-
-# allows user  to check bag without ending the game 
-# can continue to ask
-while game_start_entrance == True:
-    entrance_sequence()
 
 if game_start_palace == True:
+    palace.present_players.append(play_char)
+    print(player_location_list)
+    print(palace.present_items)
+    play_char.current_stats()
+    print(monster.name,monster.hunger)
     print("enter next stage")
 
-
-
-# clock = items.Items.clock()
-
-
-# location = scenarios.entrance
-
-
-# print(location.location,location.paths)
-# play_char.choices()
-# print(play_char.options)
-
-# next_move = input("")
-
-# play_char.bag()
-
-# play_char.loot.append(clock)
-# print(play_char.loot[0].durability)
