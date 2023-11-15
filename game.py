@@ -2,6 +2,8 @@ import random
 import items  
 import scenarios
 
+# try to get tkinter window to show all the text instead of python terminal
+
 # asks the user if they want to begin and only takes yes or no
 # if neither is input it will continue to ask the user until one is input
 begin = False
@@ -165,6 +167,11 @@ if item_generation == True:
     lament_puzzle2 = items.Items.lament_puzzle()
     lament_puzzle3 = items.Items.lament_puzzle()
     completed_lament = items.Items.completed_lament()
+# item objects being stored in different locations
+    palace.present_items.extend([health_potion1,lament_puzzle1,holy_water])
+    palace_ballroom.present_items.extend([blade,book])
+    dungeon.present_items.extend([lament_puzzle2,health_potion2,torch])
+    graveyard.present_items.extend([holy_blade,lament_puzzle3,health_potion3])
 
 elif item_generation == False:
     print("Make it out quick!")
