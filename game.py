@@ -147,7 +147,7 @@ if play_char.luck >= 5:
     item_generation_chance = random.randint(3,10)
 # numbers 5 or greater will generate items anything less wont 
 if item_generation_chance < 5:
-    item_generation = False
+    item_generation = True
 elif item_generation_chance >= 5:
     item_generation = True
 
@@ -199,9 +199,6 @@ def monster_attack_func():
         # if true, it then checks each list via index and locates the player
         # adds the monster to the players nested list area so it can "fight"
         if any(play_char in list for list in player_location_list):
-            print(player_location_list)
-            print("im losing my mind please work")
-            print(player_location_list[0][0].name)
             if player_location_list[0][0].name == play_char.name:
                 player_location_list[0].append(monster)
             elif player_location_list[1][0].name == play_char.name:
@@ -214,8 +211,58 @@ def monster_attack_func():
                 player_location_list[4].append(monster)
     if monster_attack == False:
         line_break()
-        print("you should move faster something has happend")
+        print("you should move faster something is watching you...")
     return monster_attack #returns a boolean to be used later
+
+def monster_attack_true():
+    line_break()
+    print("a monster a has appeared!")
+    print([play_char.options[2]])
+    play_char_input = input("you must fight!: ").lower()
+
+    if play_char_input == "fight":
+        if len(play_char.loot) > 0:
+            line_break()
+            print("you can select an item to use during your fight or choose not to")
+            play_char_input = input("type \"yes\" to use an item or type \"no\" to use your fist: ").lower()
+            line_break()
+            if play_char_input == "no":
+                play_char.health -= monster.strength
+                monster.health -= play_char.strength
+                line_break()
+                print(f"you have{play_char.health} hp left. the monster has {monster.health} hp left")
+            
+            elif play_char_input == "yes":
+                weapon_found = False #tracks if weapons are found in loot
+                for item in play_char.loot:
+                    if item.type == "weapon":
+                        print([item.name,item.damage])
+                        weapon_found = True #flips to true if weapon is found 
+
+                if weapon_found:
+                    play_char_input = input("choose your weapon!: ").lower()
+
+                    for item in play_char.loot:
+                        if item.type == "weapon" and play_char_input == item.name.lower():
+                            print(f"you used {item.name} on the monster")
+                            play_char_attack_with_item = item.damage + play_char.strength
+                            monster.health -= play_char_attack_with_item
+                            play_char.health -= monster.strength
+                            print(f"you have {play_char.health} hp left. the monster has {monster.health} hp left.")
+                            break
+                        else:
+                            print("invalid input. your fist shall be used")
+                            play_char.health -= monster.strength
+                            monster.health -= play_char.strength
+                            line_break()
+                            print(f"you have {play_char.health} hp left. the monster has {monster.health} hp left.")
+
+        else:
+            print("you must use your hands to fight!")
+            play_char.health -= monster.strength
+            monster.health -= play_char.strength
+            line_break()
+            print(f"you have{play_char.health} hp left. the monster has {monster.health} hp left.")
 
 
 # attaches boolean true or false to monster_attack_result
@@ -223,7 +270,13 @@ def monster_attack_func():
 monster_attack_result = monster_attack_func()
 
 if game_start_entrance == True:
+    play_char.choices()
+    play_char.bag()
+    play_char.loot.extend([holy_blade, blade])
     entrance.present_players.append(play_char)
+    monster_attack_func
+    if monster_attack_result:
+        monster_attack_true()
     
 while game_start_entrance == True:
     # takes input to display either the path your allowed to go
@@ -268,9 +321,15 @@ while game_start_entrance == True:
 
 if game_start_palace == True:
     palace.present_players.append(play_char)
-    print(player_location_list)
-    print(palace.present_items)
-    play_char.current_stats()
-    print(monster.name,monster.hunger)
-    print("enter next stage")
+    monster_attack_func()
 
+
+
+
+# check the item generation i turned it to always true for testing purposes
+# gave player holy blade and blade for testing purposes fix it 
+# comment up the monster attack true function 
+# fix the monster attack func to reduce item durability
+# make sure to seperate the function to make it more readable
+# fix error where items dont show up in bag after the fight sequence in the begining 
+# when using play_char.loot
