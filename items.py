@@ -1,11 +1,12 @@
 # this will have all the items that are available to the player
 
 class Items():
-    def __init__(self,name,type,durability,damage):
+    def __init__(self,name,type,durability,damage,health = 0):
         self.name = name
         self.type = type
         self.durability = durability
         self.damage = damage
+        self.health = health
 
     def book():
         return Items("strange book","utility",99999,0)
@@ -16,7 +17,7 @@ class Items():
     def torch():
         return Items("torch","utility",99999,5)
     def health_potion():
-        return Items("health potion","utility",1,0)
+        return Items("health potion","utility",1,0,30)
     def holy_blade():
         return Items("holy blade","weapon",99999,120)
     def lament_puzzle():
